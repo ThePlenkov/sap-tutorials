@@ -1,0 +1,42 @@
+---
+interface Props {
+  prevTask?: {
+    slug: string;
+    data: {
+      title: string;
+    };
+  };
+  nextTask?: {
+    slug: string;
+    data: {
+      title: string;
+    };
+  };
+  tutorialId: string;
+}
+
+const { prevTask, nextTask, tutorialId } = Astro.props;
+
+const getTaskSlug = (slug: string) => {
+  return slug.split('/tasks/')[1];
+};
+---
+
+<div class="flex justify-between mt-12 max-w-3xl">
+  {prevTask && (
+    <a 
+      href={`/tutorials/${tutorialId}/tasks/${getTaskSlug(prevTask.slug)}`}
+      class="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+    >
+      ← Previous: {prevTask.data.title}
+    </a>
+  )}
+  {nextTask && (
+    <a 
+      href={`/tutorials/${tutorialId}/tasks/${getTaskSlug(nextTask.slug)}`}
+      class="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ml-auto"
+    >
+      Next: {nextTask.data.title} →
+    </a>
+  )}
+</div>
