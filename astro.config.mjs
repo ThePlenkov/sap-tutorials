@@ -32,5 +32,17 @@ export default defineConfig({
       ]
     },
     wrap: true
+  },
+  vite: {
+    resolve: {
+      alias: {
+        '@': '/src',
+        '@components': '/src/components',
+        '@layouts': '/src/layouts',
+        '@content': '/src/content',
+        '@lib': '/src/lib',
+        '@types': '/src/types'
+      }
+    }
   }
 });

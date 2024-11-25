@@ -1,9 +1,10 @@
+import type { TutorialConfig } from '../../types/tutorial';
 import { tutorialGroups, tutorialGroupOrder } from './groups';
 
 // Dynamic tutorial configuration loader
-const getTutorialConfig = () => {
+const getTutorialConfig = (): TutorialConfig => {
   const configs = import.meta.glob('./*/config.ts', { eager: true });
-  const tutorialConfigs = {};
+  const tutorialConfigs: TutorialConfig = {};
 
   Object.entries(configs).forEach(([path, module]) => {
     // Extract tutorial ID from path (e.g., './abap-security/config.ts' -> 'abap-security')

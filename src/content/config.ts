@@ -4,7 +4,8 @@ const tutorials = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
-    description: z.string()
+    description: z.string(),
+    order: z.number().optional()
   })
 });
 

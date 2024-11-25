@@ -1,10 +1,4 @@
-interface QuizQuestion {
-  text: string;
-  options: {
-    text: string;
-    correct: boolean;
-  }[];
-}
+import type { QuizQuestion } from '../types/tutorial';
 
 export class QuizState {
   private questions: QuizQuestion[];

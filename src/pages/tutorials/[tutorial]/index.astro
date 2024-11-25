@@ -4,6 +4,7 @@ import Header from '../../../components/Header.astro';
 import Sidebar from '../../../components/Sidebar.astro';
 import ThemeToggle from '../../../components/ThemeToggle.astro';
 import DocumentOutline from '../../../components/DocumentOutline.astro';
+import type { TutorialTask } from '../../../types/tutorial';
 import { getCollection } from 'astro:content';
 import { tutorialConfig } from '../../../content/tutorials/config';
 
@@ -25,9 +26,18 @@ const tasks = await getCollection('tutorials', (entry) =>
   entry.slug.startsWith(`${tutorial.slug}/tasks/`)
 );
 
-const sortedTasks = tasks.sort((a, b) => {
-  const taskConfigA = tutorialConfig[tutorial.slug].tasks.indexOf(a.slug.split('/').pop()!);
-  const taskConfigB = tutorialConfig[tutorial.slug].tasks.indexOf(b.slug.split('/').pop()!);
+const sortedTasks = tasks.map(task => ({
+  slug: task.slug,
+  data: {
+    title: task.data.title,
+    description: task.data.description,
+    order: task.data.order || 0
+  }
+})) as TutorialTask[];
+
+sortedTasks.sort((a, b) => {
+  const taskConfigA = tutorialConfig[tutorial.slug]?.tasks.indexOf(a.slug.split('/').pop()!) ?? 0;
+  const taskConfigB = tutorialConfig[tutorial.slug]?.tasks.indexOf(b.slug.split('/').pop()!) ?? 0;
   return taskConfigA - taskConfigB;
 });
 ---

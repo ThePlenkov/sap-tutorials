@@ -1,12 +1,14 @@
+import type { TutorialGroups } from '../../types/tutorial';
+
 // Define group order
 export const tutorialGroupOrder = [
   'sap-cap',
   'cloud-dev',
   'abap'
-];
+] as const;
 
 // Define groups with their properties
-export const tutorialGroups = {
+export const tutorialGroups: TutorialGroups = {
   'sap-cap': {
     title: 'SAP Cloud Application Programming Model',
     description: 'Learn how to build enterprise-grade applications with SAP CAP',

@@ -1,11 +1,11 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import Search from '../components/Search.astro';
-import TutorialCard from '../components/TutorialCard.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
+import Layout from '@layouts/Layout.astro';
+import Header from '@components/Header.astro';
+import Search from '@components/Search.astro';
+import TutorialCard from '@components/TutorialCard.astro';
+import ThemeToggle from '@components/ThemeToggle.astro';
 import { getCollection } from 'astro:content';
-import { tutorialConfig, tutorialGroups, tutorialGroupOrder } from '../content/tutorials/config';
+import { tutorialGroups, tutorialGroupOrder } from '@content/tutorials/config';
 
 const allTutorials = await getCollection('tutorials', (entry) => 
   !entry.slug.includes('/')
@@ -68,11 +68,11 @@ const groupedTutorials = tutorialGroupOrder.map(groupId => ({
 </Layout>
 
 <script>
-  import { initNavigation } from '../lib/navigation';
+  import { initNavigation } from '@lib/navigation';
 
   // Initialize navigation when the page loads
   initNavigation();
 
-  // Re-initialize when the page content updates (for client-side navigation)
+  // Re-initialize when the page content updates
   document.addEventListener('astro:page-load', initNavigation);
 </script>
