@@ -1,5 +1,5 @@
 import type { TutorialConfig } from '../../types/tutorial';
-import { tutorialGroups, tutorialGroupOrder } from './groups';
+import { tutorialGroups } from './groups';
 
 // Dynamic tutorial configuration loader
 const getTutorialConfig = (): TutorialConfig => {
@@ -25,4 +25,4 @@ const getTutorialConfig = (): TutorialConfig => {
 };
 
 export const tutorialConfig = getTutorialConfig();
-export { tutorialGroups, tutorialGroupOrder };
+export { tutorialGroups };

@@ -5,30 +5,16 @@ import Search from '@components/Search.astro';
 import TutorialCard from '@components/TutorialCard.astro';
 import ThemeToggle from '@components/ThemeToggle.astro';
 import { getCollection } from 'astro:content';
-import { tutorialGroups, tutorialGroupOrder } from '@content/tutorials/config';
+import { tutorialGroups } from '@content/tutorials/config';
+import type { Tutorial } from '@/types/tutorial';
 
-const allTutorials = await getCollection('tutorials', (entry) => 
+const tutorialGroupsArray = Object.entries(tutorialGroups);
+
+const tutorials = await getCollection('tutorials', (entry) => 
   !entry.slug.includes('/')
-);
-
-// Group tutorials using the ordered groups
-const groupedTutorials = tutorialGroupOrder.map(groupId => {
-  const group = tutorialGroups[groupId];
-  if (!group) return null;
+) as Tutorial[];
   
-  return {
-    ...group,
-    id: groupId,
-    tutorials: allTutorials
-      .filter(tutorial => group.tutorials.includes(tutorial.slug))
-      .sort((a, b) => {
-        const aIndex = group.tutorials.indexOf(a.slug);
-        const bIndex = group.tutorials.indexOf(b.slug);
-        return aIndex - bIndex;
-      })
-  };
-}).filter((group): group is NonNullable<typeof group> => group !== null && group.tutorials.length > 0);---
-
+---
 <Layout title="Workshop Tutorials">
   <Header>
     <Search slot="search" />
@@ -38,9 +24,9 @@ const groupedTutorials = tutorialGroupOrder.map(groupId => {
     <!-- Group Navigation -->
     <div class="sticky top-0 z-10 bg-background border-b border-border mt-8">
       <nav class="-mb-px flex space-x-8" role="navigation">
-        {groupedTutorials.map(group => (
+        {tutorialGroupsArray.map(([id,group]) => (
           <a
-            href={`#${group.id}`}
+            href={`#${id}`}
             class="border-transparent text-text dark:text-text-inverse hover:border-accent whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors"
             data-nav-link
           >
@@ -52,23 +38,33 @@ const groupedTutorials = tutorialGroupOrder.map(groupId => {
 
     <!-- Tutorial Groups -->
     <div class="py-8 grid grid-cols-1 gap-12">
-      {groupedTutorials.map(group => (
+
+      {tutorialGroupsArray.map(([id,group]) => (
         <div 
-          id={group.id}
+          id={id}
           class="scroll-mt-32 opacity-0 translate-y-4 transition-all duration-500"
           data-section
         >
           <h2 class="text-3xl font-bold mb-4 text-text dark:text-text-inverse">{group.title}</h2>
           <p class="text-text-light dark:text-text-light mb-6">{group.description}</p>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {group.tutorials.map((tutorial) => (
-              <TutorialCard tutorial={tutorial} />
-            ))}
+
+            {group.tutorials && group.tutorials.map((tutorial_id: string) => {
+              const tutorial = tutorials.find((t) => t.slug === tutorial_id);
+              if (tutorial) {
+                return <TutorialCard tutorial={tutorial} />;
+              }
+              return null;
+            })}
           </div>
         </div>
       ))}
     </div>
   </main>
+</Layout>
+</Layout>
+</Layout>
+</Layout>
 </Layout>
 
 <script>

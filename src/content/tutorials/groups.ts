@@ -1,12 +1,5 @@
 import type { TutorialGroups } from '../../types/tutorial';
 
-// Define group order
-export const tutorialGroupOrder = [
-  'sap-cap',
-  'cloud-dev',
-  'abap'
-] as const;
-
 // Define groups with their properties
 export const tutorialGroups: TutorialGroups = {
   'sap-cap': {
