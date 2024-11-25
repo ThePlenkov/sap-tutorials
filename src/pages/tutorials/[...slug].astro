@@ -25,12 +25,9 @@ const sortedTasks = tasks.map(task => ({
   slug: task.slug,
   data: {
     title: task.data.title,
-    description: task.data.description,
-    order: task.data.order || 0
+    description: task.data.description
   }
 })) as TutorialTask[];
-
-sortedTasks.sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Layout title={tutorial.data.title}>

@@ -8,7 +8,6 @@ interface Props {
 }
 
 const { tasks, currentSlug, tutorialId } = Astro.props;
-const sortedTasks = tasks.sort((a, b) => a.data.order - b.data.order);
 ---
 
 <aside class="w-64 bg-gray-100 dark:bg-gray-800 p-6 shrink-0">
@@ -27,7 +26,7 @@ const sortedTasks = tasks.sort((a, b) => a.data.order - b.data.order);
 
     <h3 class="font-semibold mb-4">Tasks</h3>
     <ul class="space-y-2">
-      {sortedTasks.map((task) => {
+      {tasks.map((task) => {
         const taskSlug = task.slug.split('/tasks/')[1];
         return (
           <li>

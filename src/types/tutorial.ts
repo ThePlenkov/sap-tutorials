@@ -6,7 +6,6 @@ export interface Tutorial {
   data: {
     title: string;
     description: string;
-    order?: number;
   };
 }
 
@@ -15,7 +14,6 @@ export interface TutorialTask {
   data: {
     title: string;
     description: string;
-    order: number;
   };
 }
 
@@ -31,7 +29,6 @@ export interface TutorialGroups {
 
 export interface TutorialConfig {
   [key: string]: {
-    order?: number;
     tasks: string[];
     quizzes?: {
       [key: string]: QuizQuestion[];

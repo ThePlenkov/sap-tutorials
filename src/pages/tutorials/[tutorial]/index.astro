@@ -6,7 +6,8 @@ import ThemeToggle from '../../../components/ThemeToggle.astro';
 import DocumentOutline from '../../../components/DocumentOutline.astro';
 import type { TutorialTask } from '../../../types/tutorial';
 import { getCollection } from 'astro:content';
-import { tutorialConfig } from '../../../content/tutorials/config';
+import { tutorialConfig } from '@content/tutorials/config';
+// import { tutorialConfig } from '../../../content/tutorials/config';
 
 export async function getStaticPaths() {
   const tutorials = await getCollection('tutorials', (entry) => 
@@ -30,8 +31,7 @@ const sortedTasks = tasks.map(task => ({
   slug: task.slug,
   data: {
     title: task.data.title,
-    description: task.data.description,
-    order: task.data.order || 0
+    description: task.data.description
   }
 })) as TutorialTask[];
 
