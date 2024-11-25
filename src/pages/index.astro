@@ -1,11 +1,11 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import Header from '@components/Header.astro';
-import Search from '@components/Search.astro';
-import TutorialCard from '@components/TutorialCard.astro';
-import ThemeToggle from '@components/ThemeToggle.astro';
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Search from '@/components/Search.astro';
+import TutorialCard from '@/components/TutorialCard.astro';
+import ThemeToggle from '@/components/ThemeToggle.astro';
 import { getCollection } from 'astro:content';
-import { tutorialGroups } from '@content/tutorials/config';
+import { tutorialGroups } from '@/content/tutorials/config';
 import type { Tutorial } from '@/types/tutorial';
 
 const tutorialGroupsArray = Object.entries(tutorialGroups);
@@ -68,7 +68,7 @@ const tutorials = await getCollection('tutorials', (entry) =>
 </Layout>
 
 <script>
-  import { initNavigation } from '@lib/navigation';
+  import { initNavigation } from '@/lib/navigation';
 
   // Initialize navigation when the page loads
   initNavigation();

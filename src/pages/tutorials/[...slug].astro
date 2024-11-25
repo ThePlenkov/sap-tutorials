@@ -1,9 +1,9 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Header from '../../components/Header.astro';
-import Sidebar from '../../components/Sidebar.astro';
-import ThemeToggle from '../../components/ThemeToggle.astro';
-import type { TutorialTask } from '../../types/tutorial';
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Sidebar from '@/components/Sidebar.astro';
+import ThemeToggle from '@/components/ThemeToggle.astro';
+import type { TutorialTask } from '@/types/tutorial';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {

@@ -1,14 +1,14 @@
 ---
-import Layout from '../../../../layouts/Layout.astro';
-import Header from '../../../../components/Header.astro';
-import Sidebar from '../../../../components/Sidebar.astro';
-import Navigation from '../../../../components/Navigation.astro';
-import DocumentOutline from '../../../../components/DocumentOutline.astro';
-import ThemeToggle from '../../../../components/ThemeToggle.astro';
-import Quiz from '../../../../components/Quiz.astro';
-import type { TutorialTask } from '../../../../types/tutorial';
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Sidebar from '@/components/Sidebar.astro';
+import Navigation from '@/components/Navigation.astro';
+import DocumentOutline from '@/components/DocumentOutline.astro';
+import ThemeToggle from '@/components/ThemeToggle.astro';
+import Quiz from '@/components/Quiz.astro';
+import type { TutorialTask } from '@/types/tutorial';
 import { getCollection } from 'astro:content';
-import { tutorialConfig } from '../../../../content/tutorials/config';
+import { tutorialConfig } from '@/content/tutorials/config';
 
 export async function getStaticPaths() {
   const tasks = await getCollection('tutorials', (entry) => 
