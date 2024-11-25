@@ -1,0 +1,69 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import Header from '../../../../components/Header.astro';
+import Sidebar from '../../../../components/Sidebar.astro';
+import Navigation from '../../../../components/Navigation.astro';
+import DocumentOutline from '../../../../components/DocumentOutline.astro';
+import ThemeToggle from '../../../../components/ThemeToggle.astro';
+import Quiz from '../../../../components/Quiz.astro';
+import { getCollection } from 'astro:content';
+import { tutorialConfig } from '../../../../content/tutorials/config';
+
+export async function getStaticPaths() {
+  const tasks = await getCollection('tutorials', (entry) => 
+    entry.slug.includes('/tasks/')
+  );
+
+  return tasks.map(task => {
+    const [tutorialId, , taskSlug] = task.slug.split('/');
+    return {
+      params: {
+        tutorial: tutorialId,
+        slug: taskSlug
+      },
+      props: { task, tutorialId }
+    };
+  });
+}
+
+const { task, tutorialId } = Astro.props;
+const { Content, headings } = await task.render();
+
+const tasks = await getCollection('tutorials', (entry) => 
+  entry.slug.startsWith(`${tutorialId}/tasks/`)
+);
+
+const sortedTasks = tasks.sort((a, b) => {
+  const taskConfigA = tutorialConfig[tutorialId].tasks.indexOf(a.slug.split('/').pop()!);
+  const taskConfigB = tutorialConfig[tutorialId].tasks.indexOf(b.slug.split('/').pop()!);
+  return taskConfigA - taskConfigB;
+});
+
+const currentIndex = sortedTasks.findIndex(t => t.slug === task.slug);
+const nextTask = sortedTasks[currentIndex + 1];
+const prevTask = sortedTasks[currentIndex - 1];
+
+const currentTaskId = task.slug.split('/').pop()!;
+const currentQuiz = tutorialConfig[tutorialId].quizzes?.[currentTaskId];
+---
+
+<Layout title={task.data.title}>
+  <Header>
+    <ThemeToggle />
+  </Header>
+  <div class="flex min-h-screen">
+    <Sidebar tasks={sortedTasks} currentSlug={task.slug} tutorialId={tutorialId} />
+    <main class="flex-1 p-8">
+      <article class="prose prose-lg dark:prose-invert max-w-3xl">
+        <Content />
+      </article>
+      {currentQuiz && (
+        <div class="mt-12">
+          <Quiz questions={currentQuiz} />
+        </div>
+      )}
+      <Navigation prevTask={prevTask} nextTask={nextTask} tutorialId={tutorialId} />
+    </main>
+    <DocumentOutline headings={headings} />
+  </div>
+</Layout>

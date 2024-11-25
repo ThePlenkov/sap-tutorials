@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Search from '../components/Search.astro';
+import TutorialCard from '../components/TutorialCard.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import { getCollection } from 'astro:content';
+import { tutorialConfig, tutorialGroups, tutorialGroupOrder } from '../content/tutorials/config';
+
+const allTutorials = await getCollection('tutorials', (entry) => 
+  !entry.slug.includes('/')
+);
+
+// Group tutorials using the ordered groups
+const groupedTutorials = tutorialGroupOrder.map(groupId => ({
+  ...tutorialGroups[groupId],
+  id: groupId,
+  tutorials: allTutorials
+    .filter(tutorial => tutorialGroups[groupId].tutorials.includes(tutorial.slug))
+    .sort((a, b) => {
+      const aIndex = tutorialGroups[groupId].tutorials.indexOf(a.slug);
+      const bIndex = tutorialGroups[groupId].tutorials.indexOf(b.slug);
+      return aIndex - bIndex;
+    })
+})).filter(group => group.tutorials.length > 0);
+---
+
+<Layout title="Workshop Tutorials">
+  <Header>
+    <Search slot="search" />
+    <ThemeToggle />
+  </Header>
+  <main class="max-w-7xl mx-auto px-4 bg-background min-h-screen">
+    <!-- Group Navigation -->
+    <div class="sticky top-0 z-10 bg-background border-b border-border mt-8">
+      <nav class="-mb-px flex space-x-8" role="navigation">
+        {groupedTutorials.map(group => (
+          <a
+            href={`#${group.id}`}
+            class="border-transparent text-text dark:text-text-inverse hover:border-accent whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors"
+            data-nav-link
+          >
+            {group.title}
+          </a>
+        ))}
+      </nav>
+    </div>
+
+    <!-- Tutorial Groups -->
+    <div class="py-8 grid grid-cols-1 gap-12">
+      {groupedTutorials.map(group => (
+        <div 
+          id={group.id}
+          class="scroll-mt-32 opacity-0 translate-y-4 transition-all duration-500"
+          data-section
+        >
+          <h2 class="text-3xl font-bold mb-4 text-text dark:text-text-inverse">{group.title}</h2>
+          <p class="text-text-light dark:text-text-light mb-6">{group.description}</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {group.tutorials.map((tutorial) => (
+              <TutorialCard tutorial={tutorial} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </main>
+</Layout>
+
+<script>
+  import { initNavigation } from '../lib/navigation';
+
+  // Initialize navigation when the page loads
+  initNavigation();
+
+  // Re-initialize when the page content updates (for client-side navigation)
+  document.addEventListener('astro:page-load', initNavigation);
+</script>

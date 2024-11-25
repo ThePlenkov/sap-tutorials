@@ -1,0 +1,50 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import ThemeToggle from '../../components/ThemeToggle.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const tutorials = await getCollection('tutorials', (entry) => !entry.slug.includes('/'));
+  return tutorials.map(tutorial => ({
+    params: { slug: tutorial.slug },
+    props: { tutorial },
+  }));
+}
+
+const { tutorial } = Astro.props;
+const { Content } = await tutorial.render();
+
+const tasks = await getCollection('tutorials', (entry) => 
+  entry.slug.startsWith(`${tutorial.slug}/tasks/`)
+);
+const sortedTasks = tasks.sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout title={tutorial.data.title}>
+  <Header>
+    <ThemeToggle />
+  </Header>
+  <div class="flex min-h-screen">
+    <Sidebar tasks={sortedTasks} tutorialId={tutorial.slug} />
+    <main class="flex-1 p-8">
+      <article class="prose prose-lg dark:prose-invert max-w-3xl mb-12">
+        <Content />
+      </article>
+
+      <h2 class="text-2xl font-bold mb-6">Tutorial Tasks</h2>
+      <div class="space-y-4">
+        {sortedTasks.map((task) => (
+          <a
+            href={`/tutorials/${tutorial.slug}/tasks/${task.slug.split('/tasks/')[1]}`}
+            class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all"
+          >
+            <h3 class="text-xl font-semibold mb-2">{task.data.title}</h3>
+            <p class="text-gray-600 dark:text-gray-300">{task.data.description}</p>
+          </a>
+        ))}
+      </div>
+    </main>
+  </div>
+</Layout>
