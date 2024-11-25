@@ -12,18 +12,22 @@ const allTutorials = await getCollection('tutorials', (entry) =>
 );
 
 // Group tutorials using the ordered groups
-const groupedTutorials = tutorialGroupOrder.map(groupId => ({
-  ...tutorialGroups[groupId],
-  id: groupId,
-  tutorials: allTutorials
-    .filter(tutorial => tutorialGroups[groupId].tutorials.includes(tutorial.slug))
-    .sort((a, b) => {
-      const aIndex = tutorialGroups[groupId].tutorials.indexOf(a.slug);
-      const bIndex = tutorialGroups[groupId].tutorials.indexOf(b.slug);
-      return aIndex - bIndex;
-    })
-})).filter(group => group.tutorials.length > 0);
----
+const groupedTutorials = tutorialGroupOrder.map(groupId => {
+  const group = tutorialGroups[groupId];
+  if (!group) return null;
+  
+  return {
+    ...group,
+    id: groupId,
+    tutorials: allTutorials
+      .filter(tutorial => group.tutorials.includes(tutorial.slug))
+      .sort((a, b) => {
+        const aIndex = group.tutorials.indexOf(a.slug);
+        const bIndex = group.tutorials.indexOf(b.slug);
+        return aIndex - bIndex;
+      })
+  };
+}).filter((group): group is NonNullable<typeof group> => group !== null && group.tutorials.length > 0);---
 
 <Layout title="Workshop Tutorials">
   <Header>

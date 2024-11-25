@@ -51,8 +51,10 @@ export function initNavigation() {
     // Check if we're at the bottom of the page
     if (scrollPos + windowHeight >= documentHeight - 10) {
       const lastSection = sections[sections.length - 1];
-      updateActiveLink(lastSection.id);
-      return;
+      if (lastSection) {
+        updateActiveLink(lastSection.id);
+        return;
+      }
     }
 
     // Find the current section
@@ -70,7 +72,6 @@ export function initNavigation() {
       updateActiveLink(currentSection);
     }
   }
-
   // Add scroll event listener with throttling
   let ticking = false;
   window.addEventListener('scroll', () => {

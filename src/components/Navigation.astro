@@ -1,17 +1,9 @@
 ---
+import type { TutorialTask } from '@/types/tutorial';
+
 interface Props {
-  prevTask?: {
-    slug: string;
-    data: {
-      title: string;
-    };
-  };
-  nextTask?: {
-    slug: string;
-    data: {
-      title: string;
-    };
-  };
+  prevTask?: TutorialTask | undefined,
+  nextTask?: TutorialTask | undefined
   tutorialId: string;
 }
 

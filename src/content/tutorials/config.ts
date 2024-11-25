@@ -12,16 +12,15 @@ const getTutorialConfig = (): TutorialConfig => {
     const config = (module as any).tutorialConfig;
 
     // Find group by checking tutorial lists
-    const group = Object.entries(tutorialGroups).find(([_, groupData]) => 
-      groupData.tutorials.includes(tutorialId)
-    )?.[0] || 'misc';
-
-    tutorialConfigs[tutorialId] = {
-      ...config,
-      group
-    };
+    const group = Object.entries(tutorialGroups).find(([_, groupData]) =>
+      groupData.tutorials.includes(tutorialId || ''))?.[0] || 'misc';
+    if (tutorialId) {
+      tutorialConfigs[tutorialId] = {
+        ...config,
+        group
+      };
+    }
   });
-
   return tutorialConfigs;
 };
 
