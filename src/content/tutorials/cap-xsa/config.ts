@@ -6,6 +6,7 @@ export const tutorialConfig = {
     'add-xsuaa',
     'add-hana',
     'add-approuter',
+    "enable-openapi",
     'mta-build',
     'deploy-mta',
     'cap-config',
