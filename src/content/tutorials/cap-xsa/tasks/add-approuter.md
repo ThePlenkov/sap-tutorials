@@ -6,6 +6,7 @@ description: "Configure the Application Router for authentication handling in XS
 # Add Application Router
 
 The Application Router (approuter) is a crucial component in XSA applications as it serves as the single point of entry for your application. Without an approuter:
+
 - Users won't be able to authenticate
 - Your application won't receive user information
 - Direct access to your service endpoints would be possible, bypassing security
@@ -14,57 +15,55 @@ The Application Router (approuter) is a crucial component in XSA applications as
 ## Add Approuter Support
 
 1. First, run the CAP command to add approuter support:
-   ```bash
+
    cds add approuter
-   ```
 
 2. The command creates a basic approuter configuration, but we need to adjust it for XSA. Update your `mta.yaml` to include the XSA-specific approuter configuration:
 
-   ```yaml
    # ... existing modules ...
 
-     - name: cap-workshop-approuter
-       type: approuter.nodejs
-       path: app/approuter
-       parameters:
-         buildpack: sap_nodejs_buildpack
-         memory: 256M
-       requires:
-         - name: cap-workshop-auth
-         - name: srv-api
-           group: destinations
-           properties:
-             name: srv-api
-             url: ~{srv-url}
-             forwardAuthToken: true
+   - name: cap-workshop-approuter
+     type: nodejs # Important: Must use 'nodejs' for XSA compatibility
+     path: app/approuter
+     parameters:
+     buildpack: sap_nodejs_buildpack
+     memory: 256M
+     requires:
+     - name: cap-workshop-auth
+     - name: srv-api
+       group: destinations
+       properties:
+       name: srv-api
+       url: ~{srv-url}
+       forwardAuthToken: true
        provides:
-         - name: app-api
-           properties:
-             url: ${default-url}
+     - name: app-api
+       properties:
+       url: ${default-url}
 
    # ... rest of the file ...
-   ```
+
+   > ⚠️ **Important**: In XSA environments, you must use `type: nodejs`. The `approuter.nodejs` type is only supported in Cloud Foundry environments. Using `approuter.nodejs` in XSA will cause deployment failures.
 
 3. Modify the `app/approuter/xs-app.json` configuration for XSA:
 
-   ```json
    {
-     "welcomeFile": "index.html",
-     "authenticationMethod": "route",
-     "routes": [
-       {
-         "source": "^/service/(.*)$",
-         "target": "$1",
-         "destination": "srv-api",
-         "authenticationType": "xsuaa"
-       }
-     ]
+   "welcomeFile": "index.html",
+   "authenticationMethod": "route",
+   "routes": [
+   {
+   "source": "^/service/(.*)$",
+   "target": "$1",
+   "destination": "srv-api",
+   "authenticationType": "xsuaa"
    }
-   ```
+   ]
+   }
 
 ## Understanding the Approuter
 
 The Application Router serves several important functions:
+
 1. **Authentication**: Handles user login through XSUAA
 2. **Request Forwarding**: Routes requests to the appropriate backend services
 3. **Security**: Ensures all requests are authenticated before reaching your services
@@ -73,7 +72,8 @@ The Application Router serves several important functions:
 ### Key Components:
 
 1. **MTA Configuration**:
-   - `approuter.nodejs` type indicates it's an XSA approuter
+
+   - `nodejs` type indicates it's an XSA approuter
    - Requires the XSUAA service (`cap-workshop-auth`)
    - Connects to the backend service through the `srv-api` destination
 
