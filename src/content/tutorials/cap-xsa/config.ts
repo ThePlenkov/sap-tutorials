@@ -7,6 +7,7 @@ export const tutorialConfig = {
     'add-hana',
     'add-approuter',
     "enable-openapi",
+    "enable-graphql",
     'mta-build',
     'deploy-mta',
     'cap-config',
