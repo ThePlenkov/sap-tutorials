@@ -2,6 +2,7 @@ export const tutorialConfig = {
   tasks: [
     'xsa-setup',
     'data-model',
+    'extend-data-model',
     'add-mta',
     'add-xsuaa',
     'add-hana',
