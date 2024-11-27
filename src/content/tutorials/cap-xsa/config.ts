@@ -10,6 +10,9 @@ export const tutorialConfig = {
     "enable-openapi",
     "enable-graphql",
     'mta-build',
-    'deploy-mta'    
+    'deploy-mta',
+    'connect-hdi',
+    'import-external-schema',
+    'xsa-migration-checklist'
   ]
 };
