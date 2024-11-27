@@ -10,10 +10,6 @@ export const tutorialConfig = {
     "enable-openapi",
     "enable-graphql",
     'mta-build',
-    'deploy-mta',
-    'cap-config',
-    'hana-features',
-    'xsa-security',
-    'deployment'
+    'deploy-mta'    
   ]
 };

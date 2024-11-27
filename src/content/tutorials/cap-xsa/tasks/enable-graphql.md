@@ -14,26 +14,23 @@ CAP provides built-in GraphQL support, allowing you to expose your services via 
    npm install @cap-js/graphql
    ```
 
-2. Update your `package.json` to enable GraphQL:
-   ```json
-   {
-     "cds": {
-       "requires": {
-         "graphql": true
-       }
-     }
-   }
-   ```
-
-3. Add the `@graphql` annotation to your service in `srv/cat-service.cds`:
+2. Add protocol configuration to your service in `srv/cat-service.cds`:
    ```cds
    using my.bookshop as my from '../db/schema';
 
-   @graphql
+   @protocol: [
+     'odata',
+     { kind: 'graphql', path: '' }
+   ]
    service CatalogService {
        @readonly entity Books as projection on my.Books;
    }
    ```
+
+   > 💡 **Tip**: This configuration:
+   > - Keeps the default OData protocol
+   > - Adds GraphQL protocol at the root path
+   > - Allows you to use both protocols simultaneously
 
 ## Testing GraphQL Queries
 
