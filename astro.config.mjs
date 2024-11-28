@@ -1,9 +1,12 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import tailwind from '@astrojs/tailwind';
+import starlight from '@astrojs/starlight';
 
 export default defineConfig({
-  integrations: [mdx(), tailwind()],
+  integrations: [
+    // starlight({ title: 'My delightful docs site', }), 
+    mdx(), tailwind()],
   markdown: {
     shikiConfig: {
       langs: [
@@ -32,5 +35,17 @@ export default defineConfig({
       ]
     },
     wrap: true
+  },
+  vite: {
+    resolve: {
+      alias: {
+        '@': '/src',
+        '@components': '/src/components',
+        '@layouts': '/src/layouts',
+        '@content': '/src/content',
+        '@lib': '/src/lib',
+        '@types': '/src/types'
+      }
+    }
   }
 });

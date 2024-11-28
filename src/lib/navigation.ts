@@ -2,8 +2,8 @@ export function initNavigation() {
   const nav = document.querySelector('nav');
   if (!nav) return;
 
-  const links = nav.querySelectorAll('[data-nav-link]');
-  const sections = document.querySelectorAll('[data-section]');
+  const links = nav.querySelectorAll<HTMLAnchorElement>('[data-nav-link]');
+  const sections = document.querySelectorAll<HTMLElement>('[data-section]');
   const navHeight = nav.offsetHeight;
 
   // Initialize Intersection Observer for sections
@@ -51,8 +51,10 @@ export function initNavigation() {
     // Check if we're at the bottom of the page
     if (scrollPos + windowHeight >= documentHeight - 10) {
       const lastSection = sections[sections.length - 1];
-      updateActiveLink(lastSection.id);
-      return;
+      if (lastSection) {
+        updateActiveLink(lastSection.id);
+        return;
+      }
     }
 
     // Find the current section
@@ -70,7 +72,6 @@ export function initNavigation() {
       updateActiveLink(currentSection);
     }
   }
-
   // Add scroll event listener with throttling
   let ticking = false;
   window.addEventListener('scroll', () => {
@@ -88,7 +89,9 @@ export function initNavigation() {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const targetId = link.getAttribute('href');
-      const targetSection = document.querySelector(targetId);
+      if (!targetId) return;
+      
+      const targetSection = document.querySelector<HTMLElement>(targetId);
       if (targetSection) {
         const targetPosition = targetSection.offsetTop - navHeight;
         window.scrollTo({
@@ -104,7 +107,7 @@ export function initNavigation() {
   // Handle initial hash
   const hash = window.location.hash;
   if (hash) {
-    const targetSection = document.querySelector(hash);
+    const targetSection = document.querySelector<HTMLElement>(hash);
     if (targetSection) {
       setTimeout(() => {
         const targetPosition = targetSection.offsetTop - navHeight;

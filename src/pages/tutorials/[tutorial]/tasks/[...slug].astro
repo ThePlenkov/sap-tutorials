@@ -1,13 +1,14 @@
 ---
-import Layout from '../../../../layouts/Layout.astro';
-import Header from '../../../../components/Header.astro';
-import Sidebar from '../../../../components/Sidebar.astro';
-import Navigation from '../../../../components/Navigation.astro';
-import DocumentOutline from '../../../../components/DocumentOutline.astro';
-import ThemeToggle from '../../../../components/ThemeToggle.astro';
-import Quiz from '../../../../components/Quiz.astro';
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Sidebar from '@/components/Sidebar.astro';
+import Navigation from '@/components/Navigation.astro';
+import DocumentOutline from '@/components/DocumentOutline.astro';
+import ThemeToggle from '@/components/ThemeToggle.astro';
+import Quiz from '@/components/Quiz.astro';
+import type { TutorialTask } from '@/types/tutorial';
 import { getCollection } from 'astro:content';
-import { tutorialConfig } from '../../../../content/tutorials/config';
+import { tutorialConfig } from '@/content/tutorials/config';
 
 export async function getStaticPaths() {
   const tasks = await getCollection('tutorials', (entry) => 
@@ -33,26 +34,32 @@ const tasks = await getCollection('tutorials', (entry) =>
   entry.slug.startsWith(`${tutorialId}/tasks/`)
 );
 
-const sortedTasks = tasks.sort((a, b) => {
-  const taskConfigA = tutorialConfig[tutorialId].tasks.indexOf(a.slug.split('/').pop()!);
-  const taskConfigB = tutorialConfig[tutorialId].tasks.indexOf(b.slug.split('/').pop()!);
+const sortedTasks = tasks.map(task => ({
+  slug: task.slug,
+  data: {
+    title: task.data.title,
+    description: task.data.description
+  }
+})) as TutorialTask[];
+
+sortedTasks.sort((a, b) => {
+  const taskConfigA = tutorialConfig[tutorialId as keyof typeof tutorialConfig]?.tasks.indexOf(a.slug.split('/').pop()!) ?? 0;
+  const taskConfigB = tutorialConfig[tutorialId as keyof typeof tutorialConfig]?.tasks.indexOf(b.slug.split('/').pop()!) ?? 0;
   return taskConfigA - taskConfigB;
 });
-
 const currentIndex = sortedTasks.findIndex(t => t.slug === task.slug);
 const nextTask = sortedTasks[currentIndex + 1];
 const prevTask = sortedTasks[currentIndex - 1];
 
 const currentTaskId = task.slug.split('/').pop()!;
-const currentQuiz = tutorialConfig[tutorialId].quizzes?.[currentTaskId];
----
+const currentQuiz = tutorialConfig[tutorialId as keyof typeof tutorialConfig]?.quizzes?.[currentTaskId];---
 
 <Layout title={task.data.title}>
   <Header>
     <ThemeToggle />
   </Header>
   <div class="flex min-h-screen">
-    <Sidebar tasks={sortedTasks} currentSlug={task.slug} tutorialId={tutorialId} />
+    <Sidebar tasks={sortedTasks} currentSlug={task.slug} tutorialId={tutorialId as string} />
     <main class="flex-1 p-8">
       <article class="prose prose-lg dark:prose-invert max-w-3xl">
         <Content />
@@ -62,7 +69,7 @@ const currentQuiz = tutorialConfig[tutorialId].quizzes?.[currentTaskId];
           <Quiz questions={currentQuiz} />
         </div>
       )}
-      <Navigation prevTask={prevTask} nextTask={nextTask} tutorialId={tutorialId} />
+      <Navigation prevTask={prevTask} nextTask={nextTask} tutorialId={tutorialId as string} />
     </main>
     <DocumentOutline headings={headings} />
   </div>

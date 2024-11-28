@@ -1,10 +1,4 @@
-interface QuizQuestion {
-  text: string;
-  options: {
-    text: string;
-    correct: boolean;
-  }[];
-}
+import type { QuizQuestion } from '../types/tutorial';
 
 export class QuizState {
   private questions: QuizQuestion[];
@@ -54,7 +48,11 @@ export class QuizState {
         return;
       }
 
-      const isCorrect = this.questions[index].options[answer].correct;
+      const question = this.questions[index];
+      const option = question?.options[answer];
+      if (!option) return;
+
+      const isCorrect = option.correct;
       if (isCorrect) {
         correctFeedback?.classList.remove('hidden');
         incorrectFeedback?.classList.add('hidden');
@@ -64,7 +62,6 @@ export class QuizState {
         allCorrect = false;
       }
     });
-
     const checkButton = document.getElementById('check-answers');
     if (checkButton && allCorrect) {
       checkButton.textContent = '✓ All Correct!';

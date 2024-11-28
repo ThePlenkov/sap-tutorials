@@ -1,12 +1,8 @@
 ---
+import type { QuizQuestion } from '../types/tutorial';
+
 interface Props {
-  questions: {
-    text: string;
-    options: {
-      text: string;
-      correct: boolean;
-    }[];
-  }[];
+  questions: QuizQuestion[];
 }
 
 const { questions } = Astro.props;
@@ -52,14 +48,20 @@ const { questions } = Astro.props;
   </div>
 </div>
 
-<script define:vars={{ questions }}>
-  import { QuizState } from '../lib/quiz';
+<script>
+  import { QuizState } from '@/lib/quiz';
 
   // Initialize quiz when the page loads
-  new QuizState(questions);
+  const questions = document.currentScript?.getAttribute('data-questions');
+  if (questions) {
+    new QuizState(JSON.parse(questions));
+  }
 
-  // Re-initialize when the page content updates (for client-side navigation)
+  // Re-initialize when the page content updates
   document.addEventListener('astro:page-load', () => {
-    new QuizState(questions);
+    const questions = document.currentScript?.getAttribute('data-questions');
+    if (questions) {
+      new QuizState(JSON.parse(questions));
+    }
   });
 </script>

@@ -1,0 +1,15 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
+{
+  "name": "Node.js & TypeScript",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["astro-build.astro-vscode"]
+    }
+  },
+  "postCreateCommand": "npm install"
+}
